@@ -1,7 +1,19 @@
 package animals.predators;
 
+import animals.Animal;
+
+import java.util.Map;
+
 public class Wolf extends Predator {
-    public Wolf(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood) {
-        super(weight, maxAnimalInOnePlace, maxSpeed, fullySatisfiedFood);
+    private static Map<Animal, Integer> probability;
+
+    public Wolf(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender) {
+        super(weight, maxAnimalInOnePlace, maxSpeed, fullySatisfiedFood, gender);
+    }
+
+
+    @Override
+    public void dead() {
+
     }
 }
