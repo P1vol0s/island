@@ -1,5 +1,7 @@
 package animals;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public abstract class Animal {
     private final int WEIGHT;
     private final int MAX_ANIMAL_IN_ONE_PLACE;
@@ -11,6 +13,7 @@ public abstract class Animal {
     protected boolean pregnant = false;
     protected int satiety;
     protected int satietyScale = 100;
+    protected final AtomicBoolean isDead;
 
 
     public Animal(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender) {
@@ -19,6 +22,7 @@ public abstract class Animal {
         MAX_SPEED = maxSpeed;
         FULLY_SATISFIED_FOOD = fullySatisfiedFood;
         GENDER = gender;
+        isDead = new AtomicBoolean(false);
 //        TODO: в конструкторе надо прописать логику, которая при создании нового животного добавляет его в игру
     }
 
@@ -80,3 +84,11 @@ public abstract class Animal {
 
 
 }
+
+
+/*Прописать атомарно логику поедания животным животного (только в абстрактном классе травоядные)
+ * делаем AtomicBool на параметр живо ли животное или нет
+ * в методе dead сделать в начале атомарную проверку на то, не убил ли кто-то это животное до нас
+ * после реализовать метод смерти животного
+ * и уже в методе eat класса predator реализовать cas проверку после съедения животного на то, не влез ли кто-то раньше нас.
+ * Если кто-то влез, то просто безопасно прервать метод съедения  */

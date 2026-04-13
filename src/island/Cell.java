@@ -4,24 +4,26 @@ import animals.Animal;
 import plants.Grass;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class Cell {
 
 
     private List<Animal> animalsInCell;
-    private List <Grass> grassInCell;
+    private Deque<Grass> grassInCell;
 
     public Cell() {
         animalsInCell = new ArrayList<>();
-        grassInCell = new ArrayList<>();
+        grassInCell = new ConcurrentLinkedDeque<>();
     }
 
     public List<Animal> getAnimalsInCell() {
         return animalsInCell;
     }
 
-    public List<Grass> getGrassInCell() {
+    public Deque<Grass> getGrassInCell() {
         return grassInCell;
     }
 
@@ -30,7 +32,7 @@ public class Cell {
     }
 
     public void addGrassInCell(Grass grass){
-        grassInCell.add(grass);
+        grassInCell.push(grass);
     }
 
 }
