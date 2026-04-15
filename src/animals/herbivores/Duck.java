@@ -8,7 +8,7 @@ public class Duck extends Herbivore {
     private static Map<Animal, Integer> probability;
 
     public Duck(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender) {
-        super(weight, maxAnimalInOnePlace, maxSpeed, fullySatisfiedFood, gender);
+        super(gender);
     }
 
     @Override

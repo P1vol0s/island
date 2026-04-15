@@ -1,94 +1,106 @@
 package animals;
 
+import engine.EngineOutTick;
+import island.Cell;
+import settings.GameSettings;
+
+import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Animal {
-    private final int WEIGHT;
-    private final int MAX_ANIMAL_IN_ONE_PLACE;
-    private final int MAX_SPEED;
-    private final int FULLY_SATISFIED_FOOD;
-    private final String GENDER;
-    protected Animal PARTNER;
-    protected int direction = 0;
-    protected boolean pregnant = false;
-    protected int satiety;
-    protected int satietyScale = 100;
-    protected final AtomicBoolean isDead;
+    public final String GENDER;
+    public float hungerScale = 100;
+    public EngineOutTick.toDo toDo;
+    public String name;
+    protected AtomicBoolean isDead;
+    public int countTimeInBlock;
+    public int countTimeInPregnant;
+    public int x;
+    public int y;
+    public boolean isPregnant = false;
+    public boolean isDangerous = false;
+    public boolean isHunger = false;
+    public boolean isBlocked = false;
+    public boolean isDied = false;
 
 
-    public Animal(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender) {
-        WEIGHT = weight;
-        MAX_ANIMAL_IN_ONE_PLACE = maxAnimalInOnePlace;
-        MAX_SPEED = maxSpeed;
-        FULLY_SATISFIED_FOOD = fullySatisfiedFood;
-        GENDER = gender;
+    public Animal() {
+        GENDER = Arrays.asList("M", "F").get(new Random().nextInt(2));
         isDead = new AtomicBoolean(false);
-//        TODO: в конструкторе надо прописать логику, которая при создании нового животного добавляет его в игру
     }
 
-    public int getWEIGHT() {
-        return WEIGHT;
+    public Animal giveBrith() {
+        isPregnant = false;
+        isBlocked = true;
+        countTimeInBlock = 2;
+        hungerScale -= 8.3F;
+        Animal newAnimal = createNewAnimal();
+        newAnimal.x = this.x;
+        newAnimal.y = this.y;
+        return newAnimal;
+
     }
 
-    public String getGENDER() {
-        return GENDER;
+    public boolean eat(Animal bestToEatAnimal){
+        var probabilityToEat = GameSettings.getProbability().get(name).get(bestToEatAnimal.name);
+        if(new Random().nextInt(101) < probabilityToEat){
+            if(bestToEatAnimal.getWeight() > getEat() / 100 * hungerScale){
+                hungerScale = 100;
+            }else{
+                hungerScale += bestToEatAnimal.getWeight();
+            }
+            return true;
+        }
+        return false;
     }
 
-    public int getMAX_ANIMAL_IN_ONE_PLACE() {
-        return MAX_ANIMAL_IN_ONE_PLACE;
-    }
+    public void setDangerous() {
 
-    public int getMAX_SPEED() {
-        return MAX_SPEED;
-    }
-
-    public int getFULLY_SATISFIED_FOOD() {
-        return FULLY_SATISFIED_FOOD;
-    }
-
-
-    public abstract void eat();
-
-    public void sex(Animal animal) {
-//   TODO: метод sex() это метод размножения животных. Т.к все животные размножаются (не важно травоядные или хищники).
-//    Этот метод будет реализован по следующему принципу: при вызове этого метода у наследника класса происходит первая
-//    проверка на то, одинакового ли вида животные. Если эта проверка прошла успешна, то идет следующая проверка на
-//    пол животных. Если они одного пола, то выбрасывается исключение о однополых контактах. После идет проверка на шка-
-//    лу сытости. Если она заполнена меньше, чем на 1\3 у одного из животных, то процесс секса будет приостановлен
-//    по причине того, что одно из животных слишком голодно и у него не хватит сил на процесс. Если эта проверка пройдена,
-//    то процесс можно считать начатым. Во время процесса коэффициент голода у обоих животных увеличивается в 2 раза и
-//    эти 2 животных делаются просто неактивными на 3 секунды. После полового акта у самки есть 50% вероятность того, что
-//    она забеременеет. Если она забеременеет, то самец следующие 20 сек ходит около самки, и если на эту клетку вдруг по-
-//    падает животное, которое может съесть именно эту особь, то съедают самца, а самка перемещается на какое-то большое
-//    расстояние, чтобы спастись. Если съедают беременную самку, то ее малыш тоже умирает. Через 20 сек после секса самка
-//    с 95% вероятностью рожает, а если она не рожает, то значит у нее выкидыш
-    }
-
-    public abstract void choose_a_side();
-
-    public void move() {
-//    TODO: метод обращается к методы изменения состояния поля и изменяет координаты, учитывая выбранную сторону перемещения и выбранную
-//     скорость (скорость выбирается в зависимости от обстоятельств, метод, который будет изменять предпочтительную скорость,
-//     будет находиться в абстрактных классах типов животных). Метод движение должен учитывать, есть ли у животного партнер (
-//     под формулировкой партнера я имею ввиду животное, которое залетело от тебя)
-    }
-
-    public void hunger() {
-//  TODO: Метод, который каждый тик уменьшает шкалу сытости на определенную величину
     }
 
 
-    public abstract void dead();
-//    TODO: Метод dead() убивает это животное, вызывает метод удаления этого животного с поля (вызывается публичный метод класса
-//     поля, который уже в свою очередь добавляет новую задачу в пул потоков поля на удаление объекта из этого поля
+    public void sex() {
+        if (GENDER.equals("F") && new Random().nextInt(100) >= 50) {
+            isPregnant = true;
+            countTimeInPregnant = 16;
+        }
+        isBlocked = true;
+        hungerScale -= 33.2F;
+        countTimeInBlock = 2;
+    }
 
 
+    public void dead(){
+        isDied = true;
+    }
+
+
+    protected abstract Animal createNewAnimal();
+
+    public Float getWeight() {
+        return GameSettings.getAnimals().get(name).get("weight");
+    }
+
+    public Float getOnScale() {
+        return GameSettings.getAnimals().get(name).get("onCell");
+    }
+
+    public Float getSpeed() {
+        return GameSettings.getAnimals().get(name).get("speed");
+    }
+
+    public Float getEat() {
+        return GameSettings.getAnimals().get(name).get("eat");
+    }
+
+
+
+    public void move(Cell bestCell) {
+        x = bestCell.x;
+        y = bestCell.y;
+        bestCell.addAnimalInCell(this);
+
+    }
 }
 
-
-/*Прописать атомарно логику поедания животным животного (только в абстрактном классе травоядные)
- * делаем AtomicBool на параметр живо ли животное или нет
- * в методе dead сделать в начале атомарную проверку на то, не убил ли кто-то это животное до нас
- * после реализовать метод смерти животного
- * и уже в методе eat класса predator реализовать cas проверку после съедения животного на то, не влез ли кто-то раньше нас.
- * Если кто-то влез, то просто безопасно прервать метод съедения  */

@@ -7,8 +7,8 @@ import java.util.Map;
 public class Buffalo extends Herbivore {
     private static Map<Animal, Integer> probability;
 
-    public Buffalo(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender) {
-        super(weight, maxAnimalInOnePlace, maxSpeed, fullySatisfiedFood, gender);
+    public Buffalo(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender, String name) {
+        super(gender);
     }
 
 

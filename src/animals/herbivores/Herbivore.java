@@ -4,8 +4,8 @@ package animals.herbivores;
 import animals.Animal;
 
 public abstract class Herbivore extends Animal {
-    public Herbivore(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender) {
-        super(weight, maxAnimalInOnePlace, maxSpeed, fullySatisfiedFood, gender);
+    public Herbivore(String gender) {
+        super();
     }
 
     @Override
@@ -18,7 +18,7 @@ public abstract class Herbivore extends Animal {
     }
 
     @Override
-    public void eat() {
+    public void eat(Animal bestToEatAnimal) {
 // TODO: животное попадает на клетку с растением или малым животным которое это травоядное может съесть
 //        После этого идет проверка, на этой клетке животное или растение
 //        Если животное, то те, кто не может питаться животными, уходят дальше

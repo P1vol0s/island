@@ -4,7 +4,7 @@ import animals.Animal;
 
 public abstract class Predator extends Animal {
     public Predator(int weight, int maxAnimalInOnePlace, int maxSpeed, int fullySatisfiedFood, String gender) {
-        super(weight, maxAnimalInOnePlace, maxSpeed, fullySatisfiedFood, gender);
+        super();
     }
 
     @Override
@@ -13,7 +13,7 @@ public abstract class Predator extends Animal {
     }
 
     @Override
-    public void eat() {
+    public void eat(Animal bestToEatAnimal) {
 
 
     }
